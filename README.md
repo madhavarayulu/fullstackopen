@@ -1,3 +1,4 @@
+```mermaid
 sequenceDiagram
   participant Browser
   participant Server
@@ -59,3 +60,4 @@ sequenceDiagram
   Note right of Browser: Renders updated notes
   Note right of Browser: Displays outcome (success)
   deactivate Browser
+'''
