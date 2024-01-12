@@ -1,0 +1,21 @@
+```mermaid
+sequenceDiagram
+  participant Browser
+  participant Server
+
+  Browser->>Server: GET https://studies.cs.helsinki.fi/exampleapp/spa
+  activate Server
+  Server-->>Browser: HTML document (spa.html)
+  deactivate Server
+
+  Note right of Browser: Browser renders initial SPA view
+  Note right of Browser: Browser executes main.css and spa.js
+
+  Note right of Browser: JavaScript fetches notes data
+  Browser->>Server: GET https://studies.cs.helsinki.fi/exampleapp/data.json
+  activate Server
+  Server-->>Browser: [{ existing notes content }, ...]
+  deactivate Server
+
+  Note right of Browser: JavaScript renders notes
+```
