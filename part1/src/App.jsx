@@ -79,18 +79,35 @@ const App = () => {
   ]
 
   const [selected, setSelected] = useState(0)
+  const [votes, setVotes] = useState(Array(anecdotes.length).fill(0))
   // save clicks of each button to its own state
   const [good, setGood] = useState(0)
   const [neutral, setNeutral] = useState(0)
   const [bad, setBad] = useState(0)
 
+  const handleAnecdote = () => {
+    setSelected(Math.floor(Math.random()*(anecdotes.length)))
+  }
+
+  const handleVote = () => {
+    setVotes((prevVotes) => {
+      const newVotes = [...prevVotes]
+      newVotes[selected] += 1
+      return newVotes
+    })
+  }
+
   return (
     <div>
       {anecdotes[selected]}
       <br />
+      has {votes[selected]} votes
+      <br />
+      <button onClick={handleVote}>vote</button>
+      <button onClick={handleAnecdote}>next anecdote</button>
+      {console.log(votes)}
       {console.log(selected)}
-      <button onClick={() => setSelected(Math.floor(Math.random()*(anecdotes.length)))}>next anecdote</button>
-      {console.log(selected)}
+
       <h1>give feedback</h1>
       <div style={{ display: "flex" }}>
         <Button handleClick={() => setGood(good + 1)} text="good" />
