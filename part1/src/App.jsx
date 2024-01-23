@@ -10,9 +10,9 @@ const Button = (props) => {
 
 const StatisticLine = (props) => {
   return (
-    <div>
+    <>
       {props.text} {props.value}
-    </div>
+    </>
   )
 }
 
@@ -34,12 +34,34 @@ const Statistics = (props) => {
   return (
     <div>
       <h1>statistics</h1>
-      <StatisticLine text="good" value={props.good} />
-      <StatisticLine text="neutral" value={props.neutral} />
-      <StatisticLine text="bad" value={props.bad} />
-      <StatisticLine text="all" value={totalFeedbacks} />
-      <StatisticLine text="average" value={averageFeedbacks} />
-      <StatisticLine text="positive" value={positivePercentage} />
+      <table>
+        <tbody>
+          <tr>
+            <td><StatisticLine text="good" /></td>
+            <td><StatisticLine value={props.good} /></td>
+          </tr>
+          <tr>
+            <td><StatisticLine text="neutral" /></td>
+            <td><StatisticLine value={props.neutral} /></td>
+          </tr>
+          <tr>
+            <td><StatisticLine text="bad"  /></td>
+            <td><StatisticLine value={props.bad} /></td>
+          </tr>
+          <tr>
+            <td><StatisticLine text="all" /></td>
+            <td><StatisticLine value={totalFeedbacks} /></td>
+          </tr>
+          <tr>
+            <td><StatisticLine text="average" /></td>
+            <td><StatisticLine value={averageFeedbacks} /></td>
+          </tr>
+          <tr>
+            <td><StatisticLine text="positive" /></td>
+            <td><StatisticLine value={positivePercentage} /></td>
+          </tr>
+        </tbody>
+      </table>
     </div>
   )
 }
@@ -52,8 +74,8 @@ const App = () => {
 
   return (
     <div>
-      <div>
-        <h1>give feedback</h1>
+      <h1>give feedback</h1>
+      <div style={{ display: "flex" }}>
         <Button handleClick={() => setGood(good + 1)} text="good" />
         <Button handleClick={() => setNeutral(neutral + 1)} text="neutral" />
         <Button handleClick={() => setBad(bad + 1)} text="bad" />
