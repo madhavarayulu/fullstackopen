@@ -9,6 +9,6 @@ const Content = ({ parts }) => {
         )}
       </>
     )
-  }
+}
 
 export default Content
