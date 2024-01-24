@@ -2,7 +2,7 @@ import React from "react"
 import Course from "./components/Course.jsx"
 
 const App = () => {
-  const course = [
+  const courses = [
     {
       id: 1,
       name: 'Half Stack application development',
@@ -47,8 +47,12 @@ const App = () => {
     }
   ]
 
-
-  return <Course course={course} />
+  return (
+    <div>
+      <h1>Web development curriculum</h1>
+      <Course courses={courses} />
+    </div>
+  )
 }
 
 export default App
