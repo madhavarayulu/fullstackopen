@@ -16,9 +16,14 @@ const App = () => {
       id: persons.length + 1,
       name: newName
     }
-    setPersons((prevPersons) => [...prevPersons, newPerson])
+    const isNameExist = persons.find((person) => person.name === newName)
+    if (isNameExist) {
+      alert(`${isNameExist.name} is already added to phonebook`)
+    } else {
+      setPersons((prevPersons) => [...prevPersons, newPerson])
+    }
     setNewName('')
-  }
+  }  
 
   return (
     <div>
