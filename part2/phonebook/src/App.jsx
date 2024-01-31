@@ -45,6 +45,11 @@ const App = () => {
     } else {
       setPersons((prevPersons) => [...prevPersons, newPerson]);
     }
+    axios
+      .post("http://localhost:3000/persons", newPerson)
+      .then(response => {
+        console.log(response)
+      })
     setNewName("");
     setNewNumber("");
   };
