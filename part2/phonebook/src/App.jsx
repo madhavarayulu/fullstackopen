@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import axios from 'axios'
+import personsDB from "./services/persons.js";
 import Filter from "./components/Filter.jsx";
 import Form from "./components/Form.jsx";
 import Persons from "./components/Persons.jsx";
@@ -12,10 +13,10 @@ const App = () => {
 
   useEffect(() => {
     console.log('effect')
-    axios
-      .get("http://localhost:3000/persons")
+    personsDB
+      .getAll()
       .then(response => {
-        console.log('promise fulfilled')
+        console.log("promise fulfilled")
         setPersons(response.data)
       })
   }, [])
@@ -45,8 +46,8 @@ const App = () => {
     } else {
       setPersons((prevPersons) => [...prevPersons, newPerson]);
     }
-    axios
-      .post("http://localhost:3000/persons", newPerson)
+    personsDB
+      .create(newPerson)
       .then(response => {
         console.log(response)
       })
