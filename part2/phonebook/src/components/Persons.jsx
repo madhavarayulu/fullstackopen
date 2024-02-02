@@ -1,4 +1,10 @@
 const Persons = ({ persons, search, handleDelete }) => {
+  const deleteStyle = {
+    margin: 8,
+    borderWidth: 2,
+    borderStyle: "solid",
+    borderColor: "orange",
+  };
   return (
     <div>
       {persons
@@ -6,7 +12,9 @@ const Persons = ({ persons, search, handleDelete }) => {
         .map((person) => (
           <p key={person.id}>
             {person.name} {person.number}
-            <button onClick={() => handleDelete(person)}> delete</button>
+            <button style={deleteStyle} onClick={() => handleDelete(person)}>
+              Delete
+            </button>
           </p>
         ))}
     </div>

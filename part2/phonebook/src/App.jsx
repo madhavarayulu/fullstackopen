@@ -4,12 +4,14 @@ import personsDB from "./services/persons.js";
 import Filter from "./components/Filter.jsx";
 import Form from "./components/Form.jsx";
 import Persons from "./components/Persons.jsx";
+import Notification from "./components/Notification.jsx";
 
 const App = () => {
   const [persons, setPersons] = useState([]);
   const [newName, setNewName] = useState("");
   const [newNumber, setNewNumber] = useState("");
   const [search, setSearch] = useState("");
+  const [notification, setNotification] = useState(null);
 
   useEffect(() => {
     console.log("effect");
@@ -57,6 +59,19 @@ const App = () => {
           );
         });
       }
+    } else {
+      personsDB
+        .create(newPerson)
+        .then(() => {
+          setPersons((prevPersons) => [...prevPersons, newPerson]);
+          setNotification(`Added ${newPerson.name}`);
+          setTimeout(() => {
+            setNotification(null);
+          }, 5000);
+        })
+        .catch((error) => {
+          console.error(error);
+        });
     }
     setNewName("");
     setNewNumber("");
@@ -70,6 +85,10 @@ const App = () => {
         setPersons((prevPersons) =>
           prevPersons.filter((person) => person.id !== deletePersonId)
         );
+        setNotification(`Deleted ${person.name}`);
+        setTimeout(() => {
+          setNotification(null);
+        }, 5000);
       });
     }
   };
@@ -77,6 +96,7 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
+      <Notification message={notification} />
       <Filter search={search} handleInputSearch={handleInputSearch} />
       <Form
         handleSubmit={handleSubmit}
