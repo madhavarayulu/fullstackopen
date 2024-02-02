@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import axios from 'axios'
+import { v4 as uuidv4 } from "uuid";
 import personsDB from "./services/persons.js";
 import Filter from "./components/Filter.jsx";
 import Form from "./components/Form.jsx";
@@ -12,14 +12,11 @@ const App = () => {
   const [search, setSearch] = useState("");
 
   useEffect(() => {
-    console.log('effect')
-    personsDB
-      .getAll()
-      .then(response => {
-        console.log("promise fulfilled")
-        setPersons(response.data)
-      })
-  }, [])
+    console.log("effect");
+    personsDB.getAll().then((response) => {
+      setPersons(response.data);
+    });
+  }, []);
 
   const handleInputSearch = (event) => {
     setSearch(event.target.value.toLowerCase());
@@ -36,7 +33,7 @@ const App = () => {
   const handleSubmit = (event) => {
     event.preventDefault();
     const newPerson = {
-      id: persons.length + 1,
+      id: uuidv4(),
       name: newName,
       number: newNumber,
     };
@@ -44,15 +41,25 @@ const App = () => {
     if (isNameExist) {
       alert(`${isNameExist.name} is already added to phonebook`);
     } else {
-      setPersons((prevPersons) => [...prevPersons, newPerson]);
+      personsDB.create(newPerson).then((response) => {
+        console.log(response);
+        setPersons((prevPersons) => [...prevPersons, newPerson]);
+      });
     }
-    personsDB
-      .create(newPerson)
-      .then(response => {
-        console.log(response)
-      })
     setNewName("");
     setNewNumber("");
+  };
+
+  const handleDelete = (person) => {
+    if (window.confirm(`Delete ${person.name}?`)) {
+      const deletePersonId = person.id;
+      personsDB.remove(deletePersonId).then((response) => {
+        console.log(response);
+        setPersons((prevPersons) =>
+          prevPersons.filter((person) => person.id !== deletePersonId)
+        );
+      });
+    }
   };
 
   return (
@@ -67,7 +74,7 @@ const App = () => {
         handleInputNumber={handleInputNumber}
       />
       <h3>Numbers</h3>
-      <Persons persons={persons} search={search} />
+      <Persons persons={persons} search={search} handleDelete={handleDelete} />
     </div>
   );
 };
