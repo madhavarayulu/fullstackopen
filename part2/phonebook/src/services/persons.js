@@ -21,4 +21,16 @@ const remove = (id) => {
     });
 };
 
-export default { getAll, create, remove };
+const modify = (id, updatedObject) => {
+  return axios
+    .put(`${baseURL}${id}`, updatedObject)
+    .then((response) => {
+      console.log(response.data);
+    })
+    .catch((error) => {
+      console.log(error);
+      throw error;
+    });
+};
+
+export default { getAll, create, remove, modify };

@@ -8,7 +8,7 @@ import Persons from "./components/Persons.jsx";
 const App = () => {
   const [persons, setPersons] = useState([]);
   const [newName, setNewName] = useState("");
-  const [newNumber, setNewNumber] = useState(undefined);
+  const [newNumber, setNewNumber] = useState("");
   const [search, setSearch] = useState("");
 
   useEffect(() => {
@@ -38,13 +38,25 @@ const App = () => {
       number: newNumber,
     };
     const isNameExist = persons.find((person) => person.name === newName);
-    if (isNameExist) {
-      alert(`${isNameExist.name} is already added to phonebook`);
-    } else {
-      personsDB.create(newPerson).then((response) => {
-        console.log(response);
-        setPersons((prevPersons) => [...prevPersons, newPerson]);
-      });
+    if (
+      isNameExist &&
+      isNameExist.number &&
+      isNameExist.number !== newPerson.number
+    ) {
+      const userResponse = window.confirm(
+        `${isNameExist.name} is already added to phonebook, replace the old number with a new one?`
+      );
+      if (userResponse) {
+        personsDB.modify(isNameExist.id, newPerson).then(() => {
+          setPersons((prevPersons) =>
+            prevPersons.map((person) =>
+              person.id === isNameExist.id
+                ? { ...person, number: newPerson.number }
+                : person
+            )
+          );
+        });
+      }
     }
     setNewName("");
     setNewNumber("");
