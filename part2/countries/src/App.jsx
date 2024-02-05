@@ -6,6 +6,7 @@ const App = () => {
   const [countries, setCountries] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
   const [filteredCountries, setFilteredCountries] = useState([]);
+  const [selectedCountry, setSelectedCountry] = useState(null);
   const [errorMessage, setErrorMessage] = useState("");
 
   useEffect(() => {
@@ -24,6 +25,11 @@ const App = () => {
     setSearchQuery(event.target.value);
     setErrorMessage("");
     filterCountries(event.target.value);
+
+    if (event.target.value === "") {
+      setSelectedCountry(null);
+      setErrorMessage("");
+    }
   };
 
   const filterCountries = (query) => {
@@ -37,6 +43,11 @@ const App = () => {
     } else {
       setFilteredCountries(filtered);
     }
+  };
+
+  const handleShowCountry = (selectedCountry) => {
+    console.log("Selected Country:", selectedCountry);
+    setSelectedCountry(selectedCountry);
   };
 
   return (
@@ -55,16 +66,23 @@ const App = () => {
       {errorMessage && <p>{errorMessage}</p>}
 
       {filteredCountries.length > 1 && (
-        <ul>
+        <div>
           {filteredCountries.map((country) => (
-            <li key={country.cca3}>{country.name.common}</li>
+            <div key={country.cca3} style={{ height: "30px" }}>
+              <p style={{ display: "inline-block", marginRight: "10px" }}>
+                {country.name.common}
+              </p>
+              <button onClick={() => handleShowCountry(country)}>Show</button>
+            </div>
           ))}
-        </ul>
+        </div>
       )}
 
       {filteredCountries.length === 1 && (
         <CountryInfo country={filteredCountries[0]} />
       )}
+
+      {selectedCountry && <CountryInfo country={selectedCountry} />}
     </div>
   );
 };
