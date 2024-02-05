@@ -1,12 +1,12 @@
-const Notification = ({ message }) => {
+const ErrorMessage = ({ message }) => {
   if (message === null) {
     return null;
   }
 
-  const notifyStyle = {
-    color: "green",
+  const errorStyle = {
+    color: "red",
     backgroundColor: "lightgrey",
-    borderColor: "green",
+    borderColor: "red",
     borderWidth: 5,
     borderStyle: "solid",
     borderRadius: 5,
@@ -16,7 +16,7 @@ const Notification = ({ message }) => {
     fontSize: 20,
   };
 
-  return <div style={notifyStyle}>{message}</div>;
+  return <div style={errorStyle}>{message}</div>;
 };
 
-export default Notification;
+export default ErrorMessage;

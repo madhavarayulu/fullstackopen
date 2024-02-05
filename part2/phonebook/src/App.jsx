@@ -5,6 +5,7 @@ import Filter from "./components/Filter.jsx";
 import Form from "./components/Form.jsx";
 import Persons from "./components/Persons.jsx";
 import Notification from "./components/Notification.jsx";
+import ErrorMessage from "./components/ErrorMessage.jsx";
 
 const App = () => {
   const [persons, setPersons] = useState([]);
@@ -12,6 +13,7 @@ const App = () => {
   const [newNumber, setNewNumber] = useState("");
   const [search, setSearch] = useState("");
   const [notification, setNotification] = useState(null);
+  const [errorMessage, setErrorMessage] = useState(null);
 
   useEffect(() => {
     console.log("effect");
@@ -49,15 +51,26 @@ const App = () => {
         `${isNameExist.name} is already added to phonebook, replace the old number with a new one?`
       );
       if (userResponse) {
-        personsDB.modify(isNameExist.id, newPerson).then(() => {
-          setPersons((prevPersons) =>
-            prevPersons.map((person) =>
-              person.id === isNameExist.id
-                ? { ...person, number: newPerson.number }
-                : person
-            )
-          );
-        });
+        personsDB
+          .modify(isNameExist.id, newPerson)
+          .then(() => {
+            setPersons((prevPersons) =>
+              prevPersons.map((person) =>
+                person.id === isNameExist.id
+                  ? { ...person, number: newPerson.number }
+                  : person
+              )
+            );
+          })
+          .catch((error) => {
+            console.error(error);
+            setErrorMessage(
+              `Information of ${isNameExist.name} has already been removed from server`
+            );
+            setTimeout(() => {
+              setErrorMessage(null);
+            }, 5000);
+          });
       }
     } else {
       personsDB
@@ -97,6 +110,7 @@ const App = () => {
     <div>
       <h2>Phonebook</h2>
       <Notification message={notification} />
+      <ErrorMessage message={errorMessage} />
       <Filter search={search} handleInputSearch={handleInputSearch} />
       <Form
         handleSubmit={handleSubmit}
