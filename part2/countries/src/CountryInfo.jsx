@@ -1,6 +1,6 @@
 import React from "react";
 
-const CountryInfo = ({ country }) => {
+const CountryInfo = ({ country, weather }) => {
   const { name, languages, flags, area, capital } = country;
 
   return (
@@ -23,6 +23,15 @@ const CountryInfo = ({ country }) => {
         alt={flags.alt}
         style={{ width: "150px", height: "150px" }}
       />
+      {weather ? (
+        <div>
+          <p>Temprature: {weather.current.temp_c} Celcius</p>
+          <img src={weather.current.condition.icon} />
+          <p>Wind: {weather.current.wind_kph} kph</p>
+        </div>
+      ) : (
+        <p>No weather information available</p>
+      )}
     </div>
   );
 };

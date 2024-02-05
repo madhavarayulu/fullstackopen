@@ -2,12 +2,15 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import CountryInfo from "./CountryInfo";
 
+const apiKey = import.meta.env.VITE_API_KEY;
+
 const App = () => {
   const [countries, setCountries] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
   const [filteredCountries, setFilteredCountries] = useState([]);
   const [selectedCountry, setSelectedCountry] = useState(null);
   const [errorMessage, setErrorMessage] = useState("");
+  const [weather, setWeather] = useState(null);
 
   useEffect(() => {
     axios
@@ -20,6 +23,33 @@ const App = () => {
         setErrorMessage("Error fetching countries");
       });
   }, []);
+
+  const fetchWeather = (capital) => {
+    const weatherApiUrl = `https://api.weatherapi.com/v1/current.json?key=${apiKey}&q=${capital}`;
+    axios
+      .get(weatherApiUrl)
+      .then((response) => {
+        setWeather(response.data);
+      })
+      .catch((error) => {
+        console.error("Error fetching weather: ", error);
+        setErrorMessage("Error fetching weather");
+      });
+  };
+
+  useEffect(() => {
+    if (selectedCountry) {
+      const capital = selectedCountry.capital[0];
+      fetchWeather(capital);
+    }
+  }, [selectedCountry]);
+
+  useEffect(() => {
+    if (filteredCountries.length === 1) {
+      const capital = filteredCountries[0].capital[0];
+      fetchWeather(capital);
+    }
+  }, [filteredCountries]);
 
   const handleSearch = (event) => {
     setSearchQuery(event.target.value);
@@ -46,7 +76,6 @@ const App = () => {
   };
 
   const handleShowCountry = (selectedCountry) => {
-    console.log("Selected Country:", selectedCountry);
     setSelectedCountry(selectedCountry);
   };
 
@@ -54,7 +83,7 @@ const App = () => {
     <div>
       <h1>Country Information App</h1>
       <div>
-        <label htmlFor="search">Searc countries </label>
+        <label htmlFor="search">Search countries </label>
         <input
           type="text"
           id="search"
@@ -79,10 +108,12 @@ const App = () => {
       )}
 
       {filteredCountries.length === 1 && (
-        <CountryInfo country={filteredCountries[0]} />
+        <CountryInfo country={filteredCountries[0]} weather={weather} />
       )}
 
-      {selectedCountry && <CountryInfo country={selectedCountry} />}
+      {selectedCountry && (
+        <CountryInfo country={selectedCountry} weather={weather} />
+      )}
     </div>
   );
 };
