@@ -6,12 +6,13 @@ const getAll = () => {
 };
 
 const create = (newObject) => {
+  console.log(newObject)
   return axios.post(baseURL, newObject);
 };
 
 const remove = (id) => {
   return axios
-    .delete(`${baseURL}${id}`)
+    .delete(`${baseURL}/${id}`)
     .then((response) => {
       console.log(response.data);
     })
@@ -23,7 +24,7 @@ const remove = (id) => {
 
 const modify = (id, updatedObject) => {
   return axios
-    .put(`${baseURL}${id}`, updatedObject)
+    .put(`${baseURL}/${id}`, updatedObject)
     .then((response) => {
       console.log(response.data);
     })
