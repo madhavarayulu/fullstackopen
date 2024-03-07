@@ -76,7 +76,7 @@ app.get("/info", async (request, response) => {
 });
 
 app.post("/api/persons", (request, response, next) => {
-  const body = request.body;
+  const { body } = request;
 
   const newPerson = new Person({
     name: body.name,
@@ -97,7 +97,8 @@ const errorHandler = (error, request, response, next) => {
 
   if (error.name === "CastError") {
     return response.status(400).send({ error: "malformatted id" });
-  } else if (error.name === "ValidationError") {
+  }
+  if (error.name === "ValidationError") {
     return response.status(400).json({ error: error.message });
   }
 
@@ -106,7 +107,7 @@ const errorHandler = (error, request, response, next) => {
 
 app.use(errorHandler);
 
-const PORT = process.env.PORT;
+const { PORT } = process.env;
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });
