@@ -1,4 +1,4 @@
-const { test, after } = require('node:test');
+const { test, after, beforeEach } = require('node:test');
 const assert = require('node:assert');
 const mongoose = require('mongoose');
 const supertest = require('supertest');
@@ -6,6 +6,10 @@ const app = require('../app');
 const Blog = require('../models/blog');
 
 const api = supertest(app);
+
+beforeEach(async () => {
+  await Blog.deleteMany({});
+});
 
 test('blogs are returned as json', async () => {
   await api
@@ -27,6 +31,7 @@ test('new blog post creationg successfull', async () => {
 
   const newBlog = {
     title: `Capitalist Markets Aren't “Free.” They're Planned for Profit`,
+    url: 'https://jacobin.com/2024/03/neoliberalism-markets-planning-vulture-capitalism',
     author: 'Grace Blakeley',
   };
 
@@ -57,6 +62,28 @@ test('likes property defaults to 0 if missing from request', async () => {
     .expect('Content-Type', /application\/json/);
 
   assert.strictEqual(response.body.likes, 0);
+});
+
+test('creating a new blog fails with status code 400 if title is missing', async () => {
+  const newBlog = {
+    author: 'Achin Vanaik',
+    url: 'https://catalyst-journal.com/2022/06/indias-ethnic-democracy',
+  };
+
+  const response = await api.post('/api/blogs').send(newBlog).expect(400);
+
+  assert.strictEqual(response.body.error, 'Bad Request');
+});
+
+test('creating a new blog fails with status code 400 if url is missing', async () => {
+  const newBlog = {
+    title: 'The Silicon-Tongued Devil',
+    author: 'Leif Weatherby',
+  };
+
+  const response = await api.post('/api/blogs').send(newBlog).expect(400);
+
+  assert.strictEqual(response.body.error, 'Bad Request');
 });
 
 after(async () => {

@@ -27,6 +27,10 @@ blogsRouter.post('/', async (request, response, next) => {
   try {
     const body = new Blog(request.body);
 
+    if (!body.title || !body.url) {
+      return response.status(400).json({ error: 'Bad Request' });
+    }
+
     const blog = new Blog({
       title: body.title,
       author: body.author,
